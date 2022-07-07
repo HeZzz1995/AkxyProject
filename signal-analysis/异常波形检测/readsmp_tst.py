@@ -7,7 +7,7 @@
 # import sys
 # import os
 import os
-import sys
+# import sys
 from pathlib import Path
 
 
@@ -16,14 +16,14 @@ from pathlib import Path
 # Pearsons_r("2022-05-03_22-01-19", 16, 0.3)
 
 
-pah = os.getcwd()
+pah1 = os.getcwd()
 
 
-# pah1 = os.path.dirname(pah)
+# pah1 = os.path.dir_name(pah)
 
 
 def dfs_file(pah):  # 深度优先搜素找到文件夹 url
-    count = 0
+    # count = 0
     filelog = []
     day = {}
     for root, dirs, files in os.walk(pah):
@@ -81,7 +81,6 @@ class DirectionTree(object):
 
                 self.cata[f"{self.day}"] = self.filepackage
 
-
                 if self.maxeqp < len(self.filepackage):
                     self.maxeqp = len(self.filepackage)
 
@@ -126,12 +125,13 @@ class Pearsons_r:
     def createlist(self):  # time:格式 2022-04-29_17-06-22 eqp:检测设备数量
 
         from fun_readsmp import fun_readsmp
-        import os
+        # import os
 
         '''
            data->save 通道
         '''
         # try:
+
         for i in self.daylist:
             for j in range(self.eqp):
                 self.data.append(fun_readsmp(self.cata[i][j][1]))
@@ -184,7 +184,7 @@ def input_or_cwd():
     get_path = ''
     if a == '1':
         get_path = Path.cwd()
-        threshold = input("请输入判断阈值\n")
+        threshold = input("请输入判断异常的阈值(-1,1)\n")
 
     elif a == '2':
 
@@ -202,7 +202,7 @@ def input_or_cwd():
     dirtree.set_path(get_path)
     dirtree.generate_tree()
     (cata, eqp, daylist) = dirtree.print_cata()
-    print(dirtree.cata)
+    # print(dirtree.cata)
     Pearsons_r(cata, eqp, daylist, threshold)
     # b = input("是否把结果保存到result.txt，是请输入1\n")
     # if b == "1":
