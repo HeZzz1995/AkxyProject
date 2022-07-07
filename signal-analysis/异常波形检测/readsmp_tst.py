@@ -103,10 +103,10 @@ class DirectionTree(object):
             f.write(self.tree)
 
     def print_cata(self):
-        print(self.cata)
-        print(self.maxeqp)
+        # print(self.cata)
+        # print(self.maxeqp)
         self.daylist = list(sorted(self.daylist))
-        print(self.daylist)
+        # print(self.daylist)
         return self.cata, self.maxeqp, self.daylist
 
 
@@ -119,10 +119,10 @@ class Pearsons_r:
         self.data = []
         self.val = []
         self.res = {}
-        self.createlist()
         # self.correlation_by_np()
         self.daylist = daylist
         self.data_eqp_num = []
+        self.createlist()
 
     def createlist(self):  # time:格式 2022-04-29_17-06-22 eqp:检测设备数量
 
@@ -135,11 +135,11 @@ class Pearsons_r:
         # try:
         for i in self.daylist:
             for j in range(self.eqp):
-                self.data.append(fun_readsmp(str(self.cata[i].value[j][1])))
+                self.data.append(fun_readsmp(str(self.cata[i][j][1])))
                 import re
-                s = re.search(r'_\d+_', self.data[j]).span()
-                smp = self.cata[i].value[j][0]
-                self.data_eqp_num[j] = int(smp[s[0] + 1: s[1] - 1])
+                smp = self.cata[i][j][0]
+                s = re.search(r'_\d+_', smp).span()
+                self.data_eqp_num.append(smp[s[0] + 1: s[1] - 1])
                 # data = []
                 # self.cata[]
                 # if j + 1 < 10:
@@ -167,13 +167,16 @@ class Pearsons_r:
                 val = np.corrcoef(a, b)
                 # print(val)
                 # self.res[f'{i + 1}, {j + 1} ='] = val[0][1]
-                if val[0][1] >= self.threshold:
-                    problem.add(self.data_eqp_num[j])
-                    problem.add(self.data_eqp_num[i])
+                if val[0][1] >= float(self.threshold):
+                    problem.add(int(self.data_eqp_num[j]))
+                    problem.add(int(self.data_eqp_num[i]))
                     # problem.add(i + 1)
                     # problem.add(j + 1)
-
-        print(f"在{day}，第{problem}通道发现异常")
+        # sorted(problem)
+        if not problem:
+            print(f"在{day}，没有发现异常通道")
+        else:
+            print(f"在{day}，第{problem}通道发现异常")
 
 
 def input_or_cwd():
@@ -203,39 +206,4 @@ def input_or_cwd():
     Pearsons_r(cata, eqp, daylist, threshold)
 
 
-
-
-import re
-
-S = re.search(r'_\d+_', "BMS2002-04-29_17-06-22_01_").span()
-
-a = "BMS2002-04-29_17-06-22_01_"
-a = int(a[S[0] + 1:S[1] - 1])
-
-print(a)
-print(S)
 input_or_cwd()
-
-# if __name__ == '__main__':
-#     dirtree = DirectionTree()
-#     dirtree.set_path(Path.cwd())
-#     dirtree.generate_tree()
-#     print(dirtree.tree)
-# # 命令参数个数为1，生成当前目录的目录树
-# if len(sys.argv) == 1:
-#     dirtree.set_path(Path.cwd())
-#     dirtree.generate_tree()
-#     print(dirtree.tree)
-# # 命令参数个数为2并且目录存在存在
-# elif len(sys.argv) == 2 and Path(sys.argv[1]).exists():
-#     dirtree.set_path(sys.argv[1])
-#     dirtree.generate_tree()
-#     print(dirtree.tree)
-# # 命令参数个数为3并且目录存在存在
-# elif len(sys.argv) == 3 and Path(sys.argv[1]).exists():
-#     dirtree.set_path(sys.argv[1])
-#     dirtree.generate_tree()
-#     dirtree.set_filename(sys.argv[2])
-#     dirtree.save_file()
-# else:  # 参数个数太多，无法解析
-#     print('命令行参数太多，请检查！')
