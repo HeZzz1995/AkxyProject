@@ -82,6 +82,7 @@ class DirectionTree(object):
 
                 self.cata[f"{self.day}"] = self.filepackage
 
+
                 if self.maxeqp < len(self.filepackage):
                     self.maxeqp = len(self.filepackage)
 
@@ -109,9 +110,6 @@ class DirectionTree(object):
         return self.cata, self.maxeqp, self.daylist
 
 
-
-
-
 class Pearsons_r:
 
     def __init__(self, cata, eqp, daylist, threshold):
@@ -124,6 +122,7 @@ class Pearsons_r:
         self.createlist()
         # self.correlation_by_np()
         self.daylist = daylist
+        self.data_eqp_num = []
 
     def createlist(self):  # time:格式 2022-04-29_17-06-22 eqp:检测设备数量
 
@@ -136,13 +135,18 @@ class Pearsons_r:
         # try:
         for i in self.daylist:
             for j in range(self.eqp):
-                self.data.append(fun_readsmp(self.cata[i].value[j][1]))
+                self.data.append(fun_readsmp(str(self.cata[i].value[j][1])))
+                import re
+                s = re.search(r'_\d+_', self.data[j]).span()
+                smp = self.cata[i].value[j][0]
+                self.data_eqp_num[j] = int(smp[s[0] + 1: s[1] - 1])
                 # data = []
                 # self.cata[]
                 # if j + 1 < 10:
                 #     self.data.append(fun_readsmp(rf".\异常波形\{self.time}\BMS_0{j + 1}_{self.time}.smp"))
                 # else:
                 #   self.data.append(fun_readsmp(rf".\异常波形\{self.time}\BMS_{j + 1}_{self.time}.smp"))
+
             self.correlation_by_np(day=i)
             self.data = []
 
@@ -164,8 +168,10 @@ class Pearsons_r:
                 # print(val)
                 # self.res[f'{i + 1}, {j + 1} ='] = val[0][1]
                 if val[0][1] >= self.threshold:
-                    problem.add(i + 1)
-                    problem.add(j + 1)
+                    problem.add(self.data_eqp_num[j])
+                    problem.add(self.data_eqp_num[i])
+                    # problem.add(i + 1)
+                    # problem.add(j + 1)
 
         print(f"在{day}，第{problem}通道发现异常")
 
