@@ -43,12 +43,11 @@ def dfs_file(pah):  # 深度优先搜素找到文件夹 url
 
 
 class DirectionTree(object):
-    """生成目录树
-    @ pathname: 目标目录
-    @ filename: 要保存成文件的名称
+    """
+    生成目录树
     """
 
-    def __init__(self, pathname='.', filename='tree.txt'):
+    def __init__(self, pathname='.', filename='result.txt'):
         super(DirectionTree, self).__init__()
         self.pathname = Path(pathname)
         self.filename = filename
@@ -75,7 +74,7 @@ class DirectionTree(object):
             #
             if self.pathname.suffix == ".smp":
                 # self.res = self.pathname.name.split('/')
-                self.filepackage.append([self.pathname.name, Path(self.pathname)])
+                self.filepackage.append([self.pathname.name, str(self.pathname)])
                 # self.day = self.file_name[0][-19:]
                 self.day = self.pathname.parent.name
                 self.daylist.add(self.day)
@@ -135,7 +134,7 @@ class Pearsons_r:
         # try:
         for i in self.daylist:
             for j in range(self.eqp):
-                self.data.append(fun_readsmp(str(self.cata[i][j][1])))
+                self.data.append(fun_readsmp(self.cata[i][j][1]))
                 import re
                 smp = self.cata[i][j][0]
                 s = re.search(r'_\d+_', smp).span()
@@ -203,7 +202,17 @@ def input_or_cwd():
     dirtree.set_path(get_path)
     dirtree.generate_tree()
     (cata, eqp, daylist) = dirtree.print_cata()
+    print(dirtree.cata)
     Pearsons_r(cata, eqp, daylist, threshold)
+    # b = input("是否把结果保存到result.txt，是请输入1\n")
+    # if b == "1":
+    #     with open(result.txt, "w", encoding='utf-8' ) as f:
+    #         f.write(res)
+    #         # with open(self.filename, 'w', encoding='utf-8') as f:
+    # else:
+    #     ...
 
 
 input_or_cwd()
+
+# maxeqp缺失的话？ ->plan:
